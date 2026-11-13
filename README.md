@@ -4,7 +4,7 @@ A simple, free, mobile-friendly website that helps college students keep track o
 
 Built solo for **Ideathon 2026** at Dr. Virendra Swarup Institute of Computer Studies, Kanpur.
 
-**Live demo:** [ https://riddhikamishra146-del.github.io/Student-companion-ideathonn/]||[https://student-companion-ideathonn.onrender.com]
+**Live demo:** [ https://riddhikamishra146-del.github.io/Student-companion-ideathonn/] |  [https://student-companion-ideathonn.onrender.com]
 
 ## The problem
 
