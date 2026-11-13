@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <div class="card">
+  <h1>Attendance Calculator</h1>
+
+  <label>Classes held:</label>
+  <input type="number" id="held">
+  <br><br>
+
+  <label>Classes attended:</label>
+  <input type="number" id="attended">
+  <br><br>
+
+ <button onclick="calculate()">Calculate</button>
+ <p id="result"></p>
+ <hr>
+<h2>What if I take days off?</h2>
+<p>This uses the numbers you typed above.</p>
+
+<label>Days you plan to take off:</label>
+<input type="number" id="days">
+<br><br>
+
+<label>Classes per day:</label>
+<input type="number" id="perday" value="4">
+<br><br>
+
+<button onclick="simulate()">Check</button>
+<p id="result2"></p>
+<hr>
+<h2>Notice Hub</h2>
+<label>Show:</label>
+<select id="category" onchange="showNotices()">
+  <option value="All">All</option>
+  <option value="Academics">Academics</option>
+  <option value="Exams">Exams</option>
+  <option value="Events">Events</option>
+  <option value="Urgent">Urgent</option>
+</select>
+<div id="notices"></div>
+</div>
+ <script>
+
+  function calculate() {
+    var held = Number(document.getElementById("held").value);
+    var attended = Number(document.getElementById("attended").value);
+
+    if (held <= 0 || attended < 0 || attended > held) {
+      document.getElementById("result").innerText =
+        "Please enter valid numbers (attended cannot be more than held).";
+      return;
+    }
+
+    var percentage = (attended / held) * 100;
+    var message = "Your attendance is " + percentage.toFixed(1) + "%. ";
+
+    if (percentage >= 75) {
+      var canMiss = Math.floor((4 * attended - 3 * held) / 3);
+      message += "You can still miss " + canMiss + " classes and stay at 75% or above.";
+    } else {
+      var mustAttend = 3 * held - 4 * attended;
+      message += "You must attend the next " + mustAttend + " classes in a row to reach 75%.";
+    }
+
+    document.getElementById("result").innerText = message;
+  }
+    function simulate() {
+    var held = Number(document.getElementById("held").value);
+    var attended = Number(document.getElementById("attended").value);
+    var days = Number(document.getElementById("days").value);
+    var perDay = Number(document.getElementById("perday").value);
+
+    if (held <= 0 || attended < 0 || attended > held || days < 0 || perDay <= 0) {
+      document.getElementById("result2").innerText =
+        "Please fill in valid numbers above and below.";
+      return;
+    }
+
+    var missed = days * perDay;
+    var newHeld = held + missed;
+    var newPercentage = (attended / newHeld) * 100;
+
+    var message = "Missing " + days + " day(s) means " + missed + " classes. " +
+      "Your attendance would become " + newPercentage.toFixed(1) + "% (" +
+      attended + " out of " + newHeld + "). ";
+
+    if (newPercentage < 75) {
+      message += "That is below 75%!";
+    } else {
+      message += "You would still be above 75%.";
+    }
+
+    document.getElementById("result2").innerText = message;
+  }
+    var notices = [
+    { title: "C programming notes uploaded ", category: "Academics", date: "2026-11-05",
+      details: "Notes for Lesson 1 are shared by the teacher. Download and read them before the next class."
+     },
+    { title: "Computer fundamentals notes uploaded ", category: "Academics", date: "2026-11-10",
+     details: "Notes for Lesson 1 are shared by the teacher. Download and read them before the next class." },
+    { title: "Practical exam schedule ", category: "Exams", date: "2026-11-20",
+       details: "Practical exams will be held in the computer lab. Bring your ID card."
+     },
+    { title: "Fresher party ", category: "Events", date: "2026-11-08" ,
+      details: "The fresher party will be held in the ground. Dress code is formal."
+    },
+    { title: "Fee payment last date ", category: "Urgent", date: "2026-11-15",
+      details: "The last date for fee payment is 15th November. Please pay the fees to avoid late charges."
+     },
+    { title: "Annual function(srijan)", category: "Events", date: "2026-11-25",
+      details: "The annual function will be held in the college ground. All students are invited to participate."
+     },
+    { title: "Midterm exam schedule ", category: "Exams", date: "2026-11-30" ,
+      details: "Midterm exams will be held in the main hall. Bring your ID card and admit card."
+    },
+    { title: "university exam ", category: "Exams", date: "2026-12-05",
+      details: "University exams will be held in the main hall. Bring your ID card and admit card."
+     },
+    { title: "registration deadline ", category: "Urgent", date: "2026-12-10" ,
+      details: "The last date for registration is 10th December. Please register to avoid late charges."
+    },
+    { title: "Library book return deadline ", category: "Urgent", date: "2026-12-15",
+     details: "The last date for returning library books is 15th December." }
+  ];
+  function showNotices() {
+    var chosen = document.getElementById("category").value;
+    var html = "";
+
+    for (var i = 0; i < notices.length; i++) {
+      if (chosen === "All" || notices[i].category === chosen) {
+        html += '<details class="notice"><summary><strong>' + notices[i].title +
+          '</strong><br><small>' + notices[i].category + ' | ' +
+          notices[i].date + '</small></summary><p>' +
+          notices[i].details + '</p></details>';
+      }
+    }
+
+    if (html === "") {
+      html = "<p>No notices in this category.</p>";
+    }
+
+    document.getElementById("notices").innerHTML = html;
+  }
+
+  showNotices();
+
+</script>
+<style>
+    select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  .notice {
+    border-left: 4px solid #2563eb;
+    background: #f8fafc;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+  }
+  .notice small {
+    color: #555;
+  }
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f4ff;
+    margin: 0;
+    padding: 16px;
+  }
+  .card {
+    max-width: 420px;
+    margin: 20px auto;
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  h1 {
+    font-size: 24px;
+    color: #1e3a8a;
+    margin-top: 0;
+  }
+  h2 {
+    font-size: 18px;
+    color: #1e3a8a;
+  }
+  label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #1d4ed8;
+  }
+  #result, #result2 {
+    margin-top: 12px;
+    font-weight: bold;
+  }
+    summary {
+    cursor: pointer;
+  }
+</style>
+</body>
+</html>
